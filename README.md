@@ -1,44 +1,108 @@
-# Mini Knowledge Graph + SPARQL (Ultra-simple)
+# Mini Knowledge Graph + SPARQL
 
-**Goal:** In one script, build a tiny engineering knowledge graph and run 3 SPARQL queries.
-Good for a first KG portfolio piece.
+This repo builds a tiny engineering knowledge graph (RDF) and answers practical questions with SPARQL.  
+It models one assembly (A100 “Robotic Gripper RG-1”) and four parts with materials, manufacturers, cost, weight, and quantities.
 
-## What this does
-- Creates classes: `Part`, `Assembly`, `Material`, `Manufacturer`.
-- Adds one assembly (A100 Robotic Gripper) and four parts.
-- Writes the graph to `kg.ttl` (Turtle format).
-- Runs **3 queries**:
-  1) Parts and their materials
-  2) Parts + quantities for assembly A100
-  3) Total weight of assembly A100
+---
 
-## Step-by-step
-1. Create and activate a virtual environment (optional but recommended)
-   ```bash
-   python -m venv .venv
-   source .venv/bin/activate       # Windows: .venv\Scripts\activate
-   ```
+## What it does
 
-2. Install dependency
-   ```bash
-   pip install -r requirements.txt
-   ```
+- **Models**: `Part`, `Assembly`, `Material`, `Manufacturer`
+- **Relations**: `hasPart`, `usesMaterial`, `manufacturedBy`
+- **Attributes**: `weightKg`, `costUSD`, `qty`, `country`, `grade`
+- **Output graph**: `kg.ttl` (Turtle), **58 triples** (from the default dataset)
+- **Answers** (via SPARQL):
+  1. Parts → Materials  
+  2. Parts + Quantities for A100  
+  3. Total **weight** of A100  
+  4. Total **cost** of A100 (USD)  
+  5. Countries of origin for A100’s parts  
+  6. Cheapest part per material  
+  7. Cost & weight breakdown by material (A100)
 
-3. Run the demo
-   ```bash
-   python mini_kg_demo.py
-   ```
+---
 
-4. Inspect the KG
-   - Open `kg.ttl` in a text editor to see the triples.
-   - (Optional) Load `kg.ttl` into Apache Jena Fuseki or any RDF tool.
+## Results (from the default data)
+
+### Q1 — Parts and their materials
+| Part                     | Material       |
+|-------------------------|----------------|
+| Aluminum Bracket BR25   | Aluminum       |
+| Linear Actuator LA100   | Aluminum       |
+| O-Ring OR12             | StainlessSteel |
+| Stainless Bolt M8x20    | StainlessSteel |
+
+### Q2 — Parts + quantities for A100
+| Part                   | Qty |
+|------------------------|-----|
+| Aluminum Bracket BR25  | 2   |
+| Linear Actuator LA100  | 1   |
+| O-Ring OR12            | 4   |
+| Stainless Bolt M8x20   | 6   |
+
+### Q3 — Total weight of A100
+| Assembly               | Total Weight (kg) |
+|------------------------|-------------------|
+| Robotic Gripper RG-1   | **3.52**          |
+
+### Q4 — Total cost of A100 (USD)
+| Assembly               | Total Cost (USD) |
+|------------------------|------------------|
+| Robotic Gripper RG-1   | **148.8**        |
+
+### Q5 — Countries of origin for A100 parts
+| Country | # Parts |
+|---------|--------:|
+| US      | 3       |
+| DE      | 1       |
+
+### Q6 — Cheapest part per material
+| Material       | Cheapest Part            | Min Cost (USD) |
+|----------------|--------------------------|----------------:|
+| Aluminum       | Aluminum Bracket BR25    | 12.5           |
+| StainlessSteel | O-Ring OR12              | 0.2            |
+
+### Q7 — A100 cost & weight by material
+| Material       | Total Cost (USD) | Total Weight (kg) |
+|----------------|------------------:|------------------:|
+| Aluminum       | 145.0             | 3.30              |
+| StainlessSteel | 3.8               | 0.22              |
+
+> Check: 145.0 + 3.8 = **148.8 USD**, and 3.30 + 0.22 = **3.52 kg** (matches Q3 & Q4).
+
+---
+
+## How it works (at a glance)
+
+- `mini_kg_demo.py` builds the graph with **rdflib**, writes `kg.ttl`, and executes the seven SPARQL queries against the in-memory graph.  
+- `export_to_csv.py` (optional) re-runs the same queries and saves their results to `out/*.csv` for sharing or analysis.
+
+---
 
 ## Files
-- `mini_kg_demo.py` — builds the graph and runs the SPARQL.
-- `requirements.txt` — Python dependency.
-- `kg.ttl` — created on first run.
 
-## Next steps (when you're ready)
-- Add more parts/assemblies.
-- Add properties like `powerRating`, `serialNumber`, `supplierLeadTime`.
-- Add queries that answer realistic questions (cost rollups, country-of-origin, etc.).
+- `mini_kg_demo.py` — build graph ➜ run queries ➜ print results ➜ write `kg.ttl`
+- `export_to_csv.py` — run all queries ➜ write CSVs to `out/`
+- `requirements.txt` — pinned dependency (`rdflib`)
+- `kg.ttl` — generated RDF graph (58 triples with default data)
+- `out/` — generated CSVs (git-ignored by default)
+
+---
+
+## Run (minimal)
+
+```bash
+pip install -r requirements.txt
+python mini_kg_demo.py              # prints results, writes kg.ttl
+# optional CSVs:
+python export_to_csv.py --assembly A100 --ttl kg.ttl --out out
+
+---
+### Downloadable query results (CSV)
+- [Q1 Parts → Materials](examples/results/q1_parts_materials.csv)
+- [Q2 Parts + Quantities (A100)](examples/results/q2_parts_qty.csv)
+- [Q3 Total Weight (A100)](examples/results/q3_total_weight.csv)
+- [Q4 Total Cost USD (A100)](examples/results/q4_total_cost.csv)
+- [Q5 Countries of Origin (A100)](examples/results/q5_country_of_origin.csv)
+- [Q6 Cheapest Part per Material](examples/results/q6_cheapest_by_material.csv)
+- [Q7 Cost & Weight by Material (A100)](examples/results/q7_cost_weight_by_material.csv)
