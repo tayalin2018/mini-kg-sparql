@@ -1,0 +1,84 @@
+@prefix ex: <http://example.org/eng#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+ex:Assembly a rdfs:Class .
+
+ex:Manufacturer a rdfs:Class .
+
+ex:Material a rdfs:Class .
+
+ex:Part a rdfs:Class .
+
+ex:Assembly_A100 a ex:Assembly ;
+    rdfs:label "Robotic Gripper RG-1" ;
+    ex:hasPart ex:Part_P001,
+        ex:Part_P003,
+        ex:Part_P004,
+        ex:Part_P006 .
+
+ex:costUSD a rdf:Property .
+
+ex:country a rdf:Property .
+
+ex:grade a rdf:Property .
+
+ex:hasPart a rdf:Property .
+
+ex:manufacturedBy a rdf:Property .
+
+ex:qty a rdf:Property .
+
+ex:usesMaterial a rdf:Property .
+
+ex:weightKg a rdf:Property .
+
+ex:Manufacturer_C001 a ex:Manufacturer ;
+    rdfs:label "Acme Industrial" ;
+    ex:country "DE" .
+
+ex:Part_P001 a ex:Part ;
+    rdfs:label "Linear Actuator LA100" ;
+    ex:costUSD 120.0 ;
+    ex:manufacturedBy ex:Manufacturer_C001 ;
+    ex:qty 1 ;
+    ex:usesMaterial ex:Material_M001 ;
+    ex:weightKg 2.3 .
+
+ex:Part_P003 a ex:Part ;
+    rdfs:label "Aluminum Bracket BR25" ;
+    ex:costUSD 12.5 ;
+    ex:manufacturedBy ex:Manufacturer_C002 ;
+    ex:qty 2 ;
+    ex:usesMaterial ex:Material_M001 ;
+    ex:weightKg 0.5 .
+
+ex:Part_P004 a ex:Part ;
+    rdfs:label "Stainless Bolt M8x20" ;
+    ex:costUSD 0.5 ;
+    ex:manufacturedBy ex:Manufacturer_C002 ;
+    ex:qty 6 ;
+    ex:usesMaterial ex:Material_M003 ;
+    ex:weightKg 0.03 .
+
+ex:Part_P006 a ex:Part ;
+    rdfs:label "O-Ring OR12" ;
+    ex:costUSD 0.2 ;
+    ex:manufacturedBy ex:Manufacturer_C002 ;
+    ex:qty 4 ;
+    ex:usesMaterial ex:Material_M003 ;
+    ex:weightKg 0.01 .
+
+ex:Material_M001 a ex:Material ;
+    rdfs:label "Aluminum" ;
+    ex:grade "6061" .
+
+ex:Material_M003 a ex:Material ;
+    rdfs:label "StainlessSteel" ;
+    ex:grade "304" .
+
+ex:Manufacturer_C002 a ex:Manufacturer ;
+    rdfs:label "NorthForge" ;
+    ex:country "US" .
+
