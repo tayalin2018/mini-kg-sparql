@@ -96,13 +96,3 @@ pip install -r requirements.txt
 python mini_kg_demo.py              # prints results, writes kg.ttl
 # optional CSVs:
 python export_to_csv.py --assembly A100 --ttl kg.ttl --out out
-
----
-### Downloadable query results (CSV)
-- [Q1 Parts → Materials](examples/results/q1_parts_materials.csv)
-- [Q2 Parts + Quantities (A100)](examples/results/q2_parts_qty.csv)
-- [Q3 Total Weight (A100)](examples/results/q3_total_weight.csv)
-- [Q4 Total Cost USD (A100)](examples/results/q4_total_cost.csv)
-- [Q5 Countries of Origin (A100)](examples/results/q5_country_of_origin.csv)
-- [Q6 Cheapest Part per Material](examples/results/q6_cheapest_by_material.csv)
-- [Q7 Cost & Weight by Material (A100)](examples/results/q7_cost_weight_by_material.csv)
